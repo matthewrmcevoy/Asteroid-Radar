@@ -16,6 +16,7 @@ class MainFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val binding = FragmentMainBinding.inflate(inflater)
+//        binding.asteroidRecycler.adapter = AsteroidLinearAdapter
         binding.lifecycleOwner = this
 
         binding.viewModel = viewModel
