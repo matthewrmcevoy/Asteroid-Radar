@@ -17,6 +17,7 @@ data class DatabaseAsteroid constructor(
     val isPotentiallyHazardous: Boolean
 )
 
+
 fun List<DatabaseAsteroid>.asDomainModel(): List<Asteroid>{
     return map{
         Asteroid(
@@ -31,3 +32,12 @@ fun List<DatabaseAsteroid>.asDomainModel(): List<Asteroid>{
         )
     }
 }
+
+//@Entity
+//data class DatabasePod constructor(
+//    @PrimaryKey
+//    val mediaType: String,
+//    val title: String,
+//    val url: String,
+//)
+//fun

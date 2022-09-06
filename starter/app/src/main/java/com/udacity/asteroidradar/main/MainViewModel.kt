@@ -47,7 +47,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     init{
         //getAsteroids()
-        getApod()
+       getApod()
         viewModelScope.launch {
             asteroidRepository.refreshAsteroids()
 
@@ -85,7 +85,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 _aPOD.value = response
                 Log.i("ViewModel","getAPOD returned ${_aPOD.value}")
             }catch(e: Exception){
-
             }
         }
     }

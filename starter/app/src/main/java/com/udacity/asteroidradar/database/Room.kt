@@ -8,7 +8,7 @@ import kotlinx.coroutines.internal.synchronized
 
 @Dao
 interface AsteroidDao{
-    @Query("select * from DatabaseAsteroid")
+    @Query("select * from DatabaseAsteroid ORDER BY closeApproachDate asc")
     fun getAsteroids(): LiveData<List<DatabaseAsteroid>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -22,6 +22,7 @@ abstract class AsteroidsDatabase: RoomDatabase(){
 private lateinit var INSTANCE: AsteroidsDatabase
 
 fun getDatabase(context: Context): AsteroidsDatabase {
+
         if (!::INSTANCE.isInitialized) {
             INSTANCE = Room.databaseBuilder(
                 context.applicationContext,
