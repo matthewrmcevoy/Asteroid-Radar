@@ -18,7 +18,7 @@ import org.json.JSONObject
 
 class AsteroidsRepository(private val database: AsteroidsDatabase) {
     var asteroidsList = ArrayList<Asteroid>()
-    val asteroids: LiveData<List<Asteroid>> = Transformations.map(database.asteroidDao.getAsteroids()){
+    val asteroids: LiveData<List<Asteroid>> = Transformations.map(database.asteroidDao.getAsteroids(startDate)){
         it.asDomainModel()
     }
     suspend fun refreshAsteroids(){

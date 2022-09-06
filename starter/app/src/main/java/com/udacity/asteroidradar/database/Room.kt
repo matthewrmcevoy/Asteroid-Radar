@@ -4,12 +4,13 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.udacity.asteroidradar.Asteroid
+import com.udacity.asteroidradar.main.startDate
 import kotlinx.coroutines.internal.synchronized
 
 @Dao
 interface AsteroidDao{
-    @Query("select * from DatabaseAsteroid ORDER BY closeApproachDate asc")
-    fun getAsteroids(): LiveData<List<DatabaseAsteroid>>
+    @Query("select * from DatabaseAsteroid WHERE closeApproachDate >= :startDate ORDER BY closeApproachDate asc")
+    fun getAsteroids(startDate: String): LiveData<List<DatabaseAsteroid>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertALL(vararg asteroids: DatabaseAsteroid)
