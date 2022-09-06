@@ -45,6 +45,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val aPOD: LiveData<PictureOfDay>
     get()= _aPOD
 
+    private val _showAsteroidDetail=MutableLiveData<Asteroid>()
+    val showAsteroidDetail: LiveData<Asteroid>
+    get()= _showAsteroidDetail
+
     init{
         //getAsteroids()
        getApod()
@@ -87,5 +91,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             }catch(e: Exception){
             }
         }
+    }
+    fun displayAsteroidDetails(asteroid: Asteroid){
+        _showAsteroidDetail.value = asteroid
+    }
+    fun displayAsteroidDetailComplete(){
+        _showAsteroidDetail.value = null
     }
 }

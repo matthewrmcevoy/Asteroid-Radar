@@ -12,7 +12,7 @@ import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.TextItemViewHolder
 
-class AsteroidLinearAdapter : RecyclerView.Adapter<AsteroidLinearAdapter.ViewHolder>() {
+class AsteroidLinearAdapter(private val onClickListener: OnClickListener) : RecyclerView.Adapter<AsteroidLinearAdapter.ViewHolder>() {
     var data = listOf<Asteroid>()
     set(value){
         field = value
@@ -24,6 +24,9 @@ class AsteroidLinearAdapter : RecyclerView.Adapter<AsteroidLinearAdapter.ViewHol
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = data[position]
         //val res = holder.itemView.context.resources
+        holder.itemView.setOnClickListener{
+            onClickListener.onClick(item)
+        }
         holder.asteroidCodeName.text = item.codename
         holder.asteroidCADate.text = item.closeApproachDate
         holder.asteroidHazard.setImageResource(
@@ -43,6 +46,9 @@ class AsteroidLinearAdapter : RecyclerView.Adapter<AsteroidLinearAdapter.ViewHol
         val asteroidCodeName: TextView = itemView.findViewById(R.id.code_name_txt)
         val asteroidCADate: TextView = itemView.findViewById(R.id.nearest_approach_txt)
         val asteroidHazard: ImageView = itemView.findViewById(R.id.potential_hazard_image)
+    }
+    class OnClickListener(val clickListener:(asteroid: Asteroid) -> Unit){
+        fun onClick(asteroid: Asteroid) = clickListener(asteroid)
     }
 }
 
