@@ -15,12 +15,10 @@ class AsteroidRadarApplication: Application() {
     override fun onCreate() {
         super.onCreate()
         delayedInit()
-        Log.i("Appl","delayedInit called to schedule work")
 
     }
     private fun delayedInit(){
         applicationScope.launch {
-            Log.i("Appl","Calling setupRecurringWork")
             setupRecurringWork()
         }
     }
@@ -31,7 +29,6 @@ class AsteroidRadarApplication: Application() {
             .build()
         val repeatRequest = PeriodicWorkRequestBuilder<RefreshDataWork>(1, TimeUnit.DAYS).build()
         WorkManager.getInstance().enqueueUniquePeriodicWork(RefreshDataWork.WORK_NAME, ExistingPeriodicWorkPolicy.KEEP, repeatRequest)
-        Log.i("SURW","RecurringWorkSetup")
     }
 
 }

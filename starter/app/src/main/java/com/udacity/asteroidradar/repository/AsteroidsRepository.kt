@@ -21,6 +21,9 @@ class AsteroidsRepository(private val database: AsteroidsDatabase) {
     val asteroids: LiveData<List<Asteroid>> = Transformations.map(database.asteroidDao.getAsteroids(startDate)){
         it.asDomainModel()
     }
+
+    val asteroidsDaily = database.asteroidDao.getTodayAsteroids(startDate)
+
     suspend fun refreshAsteroids(){
         withContext(Dispatchers.IO){
             try {

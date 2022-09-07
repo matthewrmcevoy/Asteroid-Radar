@@ -1,6 +1,7 @@
 package com.udacity.asteroidradar.main
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -27,7 +28,7 @@ class MainFragment : Fragment() {
         })
         binding.asteroidRecycler.adapter = adapter
 
-        viewModel.test.observe(viewLifecycleOwner, Observer<List<Asteroid>>{ asteroids ->
+        viewModel.asteroidsView.observe(viewLifecycleOwner, Observer<List<Asteroid>>{ asteroids ->
             asteroids?.apply{
                 adapter.data = asteroids
             }
@@ -50,6 +51,13 @@ class MainFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.show_today_menu -> {
+                Log.i("MainFragment","calling DisplayDailyAsteroids")
+                viewModel.displayDailyAsteroids()
+            }
+            else -> viewModel.displayWeekAsteroids()
+        }
         return true
     }
 }

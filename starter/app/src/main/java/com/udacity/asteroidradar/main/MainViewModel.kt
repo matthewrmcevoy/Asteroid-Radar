@@ -13,6 +13,7 @@ import com.udacity.asteroidradar.api.getNextSevenDaysFormattedDates
 import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
 import com.udacity.asteroidradar.database.AsteroidDao
 import com.udacity.asteroidradar.database.AsteroidsDatabase
+import com.udacity.asteroidradar.database.asDomainModel
 import com.udacity.asteroidradar.database.getDatabase
 import com.udacity.asteroidradar.repository.AsteroidsRepository
 import kotlinx.coroutines.launch
@@ -37,9 +38,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val status: LiveData<AsteroidRadarApiStatus>
     get() = _status
 
-    private val _asteroids = MutableLiveData<List<Asteroid>>()
-    val asteroids: LiveData<List<Asteroid>>
-    get()= _asteroids
+    //var asteroidsView = asteroidRepository.asteroids
+    lateinit var asteroidsView:LiveData<List<Asteroid>>
 
     private val _aPOD = MutableLiveData<PictureOfDay>()
     val aPOD: LiveData<PictureOfDay>
@@ -50,38 +50,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     get()= _showAsteroidDetail
 
     init{
-        //getAsteroids()
-       getApod()
-        viewModelScope.launch {
-            asteroidRepository.refreshAsteroids()
-
-        }
-
+        getApod()
+        asteroidsView = asteroidRepository.asteroids
     }
-    val test = asteroidRepository.asteroids
 
-//    private fun getAsteroids() {
-//        viewModelScope.launch{
-//            _status.value = AsteroidRadarApiStatus.LOADING
-//            try{
-//                val response = AsteroidRadarApi.retrofitService.getAsteroids(startDate, endDate, Constants.Demo_KEY)
-//                if(response.isSuccessful){
-//                    val asteroidsList = parseAsteroidsJsonResult(JSONObject(response.body()!!))
-//                    _asteroids.value = asteroidsList
-//                    Log.i("ViewModel","getAsteroids _asteroids.value from query =${_asteroids.value}")
-//                    if(asteroidsList.size > 0) {
-//                        _status.value = AsteroidRadarApiStatus.DONE
-//                    }else{
-//                        _status.value = AsteroidRadarApiStatus.NO_ITEMS
-//                    }
-//                }
-//
-//            } catch (e: Exception){
-//                _status.value = AsteroidRadarApiStatus.ERROR
-//                Log.i("ViewModel","Error: ${e.message}")
-//            }
-//        }
-//    }
     private fun getApod(){
         viewModelScope.launch {
             try{
@@ -97,5 +69,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
     fun displayAsteroidDetailComplete(){
         _showAsteroidDetail.value = null
+    }
+    fun displayWeekAsteroids(){
+        asteroidsView = asteroidRepository.asteroids
+        }
+
+    fun displayDailyAsteroids(){
+        Log.i("ViewModel","current asteroids: ${asteroidsView.value}")
+        asteroidsView = asteroidRepository.asteroidsDaily
+        Log.i("ViewModel","new asteroids: ${asteroidsView.value}")
     }
 }
