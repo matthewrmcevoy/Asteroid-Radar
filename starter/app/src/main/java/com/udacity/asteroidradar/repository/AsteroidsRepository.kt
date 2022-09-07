@@ -18,11 +18,10 @@ import org.json.JSONObject
 
 class AsteroidsRepository(private val database: AsteroidsDatabase) {
     var asteroidsList = ArrayList<Asteroid>()
-    val asteroids: LiveData<List<Asteroid>> = Transformations.map(database.asteroidDao.getAsteroids(startDate)){
+    val asteroidsDaily = database.asteroidDao.getTodayAsteroids(startDate)
+    var asteroids: LiveData<List<Asteroid>> = Transformations.map(database.asteroidDao.getAsteroids(startDate)){
         it.asDomainModel()
     }
-
-    val asteroidsDaily = database.asteroidDao.getTodayAsteroids(startDate)
 
     suspend fun refreshAsteroids(){
         withContext(Dispatchers.IO){
@@ -36,6 +35,16 @@ class AsteroidsRepository(private val database: AsteroidsDatabase) {
                 database.asteroidDao.insertALL(*asteroidsList.asDatabaseModel())
             }catch(e: Exception){
                 Log.i("Repository","No Internet Connection")
+            }
+        }
+    }
+    suspend fun getDailyAsteroids(){
+        withContext(Dispatchers.IO){
+            try{
+                asteroids = database.asteroidDao.getTodayAsteroids(startDate)
+                Log.i("Repository","changed asteroidData to ${asteroids.value}")
+            }catch(e: Exception){
+                Log.i("Repository", "failure: ${e.message}")
             }
         }
     }

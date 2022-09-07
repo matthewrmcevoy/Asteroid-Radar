@@ -54,9 +54,9 @@ class MainFragment : Fragment() {
         when(item.itemId) {
             R.id.show_today_menu -> {
                 Log.i("MainFragment","calling DisplayDailyAsteroids")
-                viewModel.displayDailyAsteroids()
+                viewModel.updateViewType(HistoryHorizon.DAY)
             }
-            else -> viewModel.displayWeekAsteroids()
+            else -> viewModel.updateViewType(HistoryHorizon.WEEK)
         }
         return true
     }

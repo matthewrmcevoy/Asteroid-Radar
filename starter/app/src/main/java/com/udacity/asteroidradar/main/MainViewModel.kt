@@ -25,7 +25,11 @@ import java.time.LocalDate
 import java.util.*
 
 enum class AsteroidRadarApiStatus{LOADING, ERROR, DONE, NO_ITEMS}
-
+enum class HistoryHorizon(val value: String){
+    WEEK("week"),
+    DAY("day"),
+    SAVE("save")
+}
 val lDates = getNextSevenDaysFormattedDates()
 val startDate = lDates[0]
 val endDate = lDates[7]
@@ -38,8 +42,16 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val status: LiveData<AsteroidRadarApiStatus>
     get() = _status
 
+    private val viewType = MutableLiveData(HistoryHorizon.WEEK)
     //var asteroidsView = asteroidRepository.asteroids
-    lateinit var asteroidsView:LiveData<List<Asteroid>>
+    val asteroidsView = Transformations.switchMap(viewType){
+        when(it!!){
+            HistoryHorizon.WEEK -> asteroidRepository.asteroids
+            HistoryHorizon.DAY -> asteroidRepository.asteroidsDaily
+            HistoryHorizon.SAVE -> asteroidRepository.asteroids
+        }
+    }
+    //val asteroidsView = asteroidRepository.asteroids
 
     private val _aPOD = MutableLiveData<PictureOfDay>()
     val aPOD: LiveData<PictureOfDay>
@@ -51,7 +63,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     init{
         getApod()
-        asteroidsView = asteroidRepository.asteroids
     }
 
     private fun getApod(){
@@ -70,13 +81,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun displayAsteroidDetailComplete(){
         _showAsteroidDetail.value = null
     }
-    fun displayWeekAsteroids(){
-        asteroidsView = asteroidRepository.asteroids
-        }
-
-    fun displayDailyAsteroids(){
-        Log.i("ViewModel","current asteroids: ${asteroidsView.value}")
-        asteroidsView = asteroidRepository.asteroidsDaily
-        Log.i("ViewModel","new asteroids: ${asteroidsView.value}")
+    fun updateViewType(vtype: HistoryHorizon ){
+        viewType.value = vtype
     }
 }
