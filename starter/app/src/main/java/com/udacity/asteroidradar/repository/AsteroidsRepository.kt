@@ -25,14 +25,19 @@ class AsteroidsRepository(private val database: AsteroidsDatabase) {
         it.asDomainModel()
     }
     val status = MutableLiveData<AsteroidRadarApiStatus>()
+    init{
+        status.value = AsteroidRadarApiStatus.LOADING
+    }
 
 
     suspend fun refreshAsteroids(){
         Log.i("Repository","refreshAsteroids running")
         withContext(Dispatchers.IO){
+                status.postValue(AsteroidRadarApiStatus.LOADING)
                 Log.i("Repository","Status set to loading")
                 val response = AsteroidRadarApi.retrofitService.getAsteroids(startDate,endDate,Constants.API_KEY)
                 database.asteroidDao.insertALL(*parseAsteroidsJsonResult(JSONObject(response.body()!!)).asDatabaseModel())
+                status.postValue(AsteroidRadarApiStatus.DONE)
         }
     }
 //    suspend fun getDailyAsteroids(){

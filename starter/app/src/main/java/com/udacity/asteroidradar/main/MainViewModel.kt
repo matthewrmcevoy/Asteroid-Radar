@@ -61,6 +61,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     get()= _showAsteroidDetail
 
     init{
+        status.value = AsteroidRadarApiStatus.LOADING
         getApod()
         viewModelScope.launch {
                 asteroidRepository.refreshAsteroids()
