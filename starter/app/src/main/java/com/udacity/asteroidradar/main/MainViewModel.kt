@@ -62,6 +62,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     init{
         getApod()
+        viewModelScope.launch {
+                asteroidRepository.refreshAsteroids()
+        }
+
     }
 
     private fun getApod(){
