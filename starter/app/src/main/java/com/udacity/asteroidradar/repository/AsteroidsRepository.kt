@@ -20,7 +20,6 @@ import org.json.JSONObject
 import retrofit2.await
 
 class AsteroidsRepository(private val database: AsteroidsDatabase) {
-    //var asteroidsList = ArrayList<Asteroid>()
     val asteroidsDaily = database.asteroidDao.getTodayAsteroids(startDate)
     var asteroids: LiveData<List<Asteroid>> = Transformations.map(database.asteroidDao.getAsteroids(startDate)){
         it.asDomainModel()
@@ -30,15 +29,11 @@ class AsteroidsRepository(private val database: AsteroidsDatabase) {
 
     suspend fun refreshAsteroids(){
         Log.i("Repository","refreshAsteroids running")
-        status.value = AsteroidRadarApiStatus.LOADING
         withContext(Dispatchers.IO){
                 Log.i("Repository","Status set to loading")
                 val response = AsteroidRadarApi.retrofitService.getAsteroids(startDate,endDate,Constants.API_KEY)
-                //asteroidsList = parseAsteroidsJsonResult(JSONObject(response.body()!!))
-                //Log.i("Repository","asteroidsList is $asteroidsList")
                 database.asteroidDao.insertALL(*parseAsteroidsJsonResult(JSONObject(response.body()!!)).asDatabaseModel())
         }
-        status.value = AsteroidRadarApiStatus.DONE
     }
 //    suspend fun getDailyAsteroids(){
 //        withContext(Dispatchers.IO){
