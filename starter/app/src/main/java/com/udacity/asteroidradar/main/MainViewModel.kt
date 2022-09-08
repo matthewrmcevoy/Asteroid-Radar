@@ -38,9 +38,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val database = getDatabase(application)
     private val asteroidRepository = AsteroidsRepository(database)
 
-    private val _status = MutableLiveData<AsteroidRadarApiStatus>()
-    val status: LiveData<AsteroidRadarApiStatus>
-    get() = _status
+    val status = asteroidRepository.status
+
 
     private val viewType = MutableLiveData(HistoryHorizon.WEEK)
     //var asteroidsView = asteroidRepository.asteroids
